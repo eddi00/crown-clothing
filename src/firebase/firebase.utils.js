@@ -7,6 +7,7 @@ import {
   getDoc,
   collection,
   setDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -20,6 +21,17 @@ const firebaseConfig = {
   messagingSenderId: "635305400071",
   appId: "1:635305400071:web:db372f9d53ebf6cb4c57a2",
 };
+
+// Initialize Firebase
+
+export const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore();
+export const auth = getAuth();
+
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });
+export const signInWithGoogle = () => signInWithPopup(auth, provider);
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
@@ -50,13 +62,17 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
-// Initialize Firebase
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
 
-export const app = initializeApp(firebaseConfig);
+  objectsToAdd.forEach(obj => {
+    const newDocRef = doc(collectionRef);
+    batch.set(newDocRef, obj);
+  });
 
-export const db = getFirestore();
-export const auth = getAuth();
-
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ prompt: "select_account" });
-export const signInWithGoogle = () => signInWithPopup(auth, provider);
+  return await batch.commit();
+};
