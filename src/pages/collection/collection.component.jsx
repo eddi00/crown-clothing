@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+/* import React, { useEffect } from "react";
 import { connect, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
@@ -13,13 +13,6 @@ const CollectionPage = () => {
 
   let selector = useSelector(state => state.shop);
   let collection = selector.collections[collectionId];
-
-  /* useEffect(() => {
-    console.log(x.collections[collectionId]);
-    if (x.collectionId) {
-      collection = x.collections[collectionId];
-    }
-  }, [x]); */
 
   if (collection) {
     const { title, items } = collection;
@@ -36,6 +29,40 @@ const CollectionPage = () => {
   } else {
     return null;
   }
+};
+
+export default CollectionPage;
+ */
+
+import React from "react";
+import { connect, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+
+import CollectionItem from "../../components/collection-item/collection-item.component";
+
+import {
+  CollectionPageContainer,
+  CollectionTitle,
+  CollectionItemsContainer,
+} from "./collection.styles";
+
+const CollectionPage = () => {
+  let { collectionId } = useParams();
+
+  let selector = useSelector(state => state.shop);
+  let collection = selector.collections[collectionId];
+
+  const { title, items } = collection;
+  return (
+    <CollectionPageContainer>
+      <CollectionTitle>{title}</CollectionTitle>
+      <CollectionItemsContainer>
+        {items.map(item => (
+          <CollectionItem key={item.id} item={item} />
+        ))}
+      </CollectionItemsContainer>
+    </CollectionPageContainer>
+  );
 };
 
 export default CollectionPage;

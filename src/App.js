@@ -17,6 +17,10 @@ import { onSnapshot } from "firebase/firestore";
 
 import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selector";
+import { selectIsCollectionsLoaded } from "./redux/shop/shop.selectors";
+
+import WithSpinner from "./components/with-spinner/with-spinner.component";
+const CollectionsWithSpinner = WithSpinner(CollectionPage);
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -49,16 +53,19 @@ class App extends React.Component {
   }
 
   render() {
+    const { isCollectionsLoaded } = this.props;
+
     return (
       <>
         <Header />
         <Routes>
           <Route exact path="/" element={<HomePage />} />
-          <Route path="/shop" element={<ShopPage />} />
+          <Route exact path="/shop" element={<ShopPage />} />
           <Route
-            exact
             path="/shop/:collectionId"
-            element={<CollectionPage />}
+            element={
+              <CollectionsWithSpinner isLoading={!isCollectionsLoaded} />
+            }
           />
           <Route exact path="/checkout" element={<CheckoutPage />} />
           <Route
@@ -80,6 +87,7 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  isCollectionsLoaded: selectIsCollectionsLoaded,
 });
 
 const mapDispatchToProps = dispatch => ({
