@@ -17,14 +17,16 @@ import { selectIsCollectionsLoaded } from "./redux/shop/shop.selectors";
 
 import WithSpinner from "./components/with-spinner/with-spinner.component";
 import { checkUserSession } from "./redux/user/user.actions";
+import { fetchCollectionsStart } from "./redux/shop/shop.actions";
 const CollectionsWithSpinner = WithSpinner(CollectionPage);
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { checkUserSession } = this.props;
+    const { checkUserSession, fetchCollectionsStart } = this.props;
     checkUserSession();
+    fetchCollectionsStart();
   }
 
   componentWillUnmount() {
@@ -71,6 +73,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   checkUserSession: () => dispatch(checkUserSession()),
+  fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
