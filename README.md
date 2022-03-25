@@ -1,6 +1,6 @@
 # Crown E-Commerce ReactJs/Redux mockup based on ZTM ReactJs course project
 
-Link to the site: `https://crown-db-9141c.web.app/`
+Link to the site: https://crown-db-9141c.web.app/
 
 ## Getting Started with Create React App
 
